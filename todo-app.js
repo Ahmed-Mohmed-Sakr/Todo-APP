@@ -1,35 +1,8 @@
-const todos = [
-  { text: "walk the dog", completed: true },
-  { text: "feed the cat", completed: false },
-  { text: "buy groceries", completed: true },
-  { text: "go to the gym", completed: false },
-  { text: "learn javascript", completed: false },
-];
+const todos = getSavedTodos();
 
 const filters = {
   searchText: "",
-};
-
-const renderTodos = function (todos, filters) {
-  const filterTodos = todos.filter(function (todo) {
-    return todo.text.toLowerCase().includes(filters.searchText.toLowerCase());
-  });
-
-  const incompleteTodos = filterTodos.filter(function (todo) {
-    return !todo.completed;
-  });
-
-  document.querySelector("#todos").innerHTML = "";
-
-  const summary = document.createElement("h2");
-  summary.textContent = `You have ${incompleteTodos.length} todos left`;
-  document.querySelector("#todos").appendChild(summary);
-
-  filterTodos.forEach(function (todo) {
-    const newP = document.createElement("p");
-    newP.textContent = todo.text;
-    document.querySelector("#todos").appendChild(newP);
-  });
+  hideCompleted: false,
 };
 
 renderTodos(todos, filters);
@@ -42,10 +15,18 @@ document.querySelector("#search-text").addEventListener("input", function (e) {
 document.querySelector("#todo-form").addEventListener("submit", function (e) {
   e.preventDefault();
   todos.push({
+    id: uuidv4(),
     text: e.target.elements.newTodo.value,
     completed: false,
   });
-
+  saveTodos(todos);
   renderTodos(todos, filters);
   e.target.elements.newTodo.value = "";
 });
+
+document
+  .querySelector("#hide-completed")
+  .addEventListener("change", function (e) {
+    filters.hideCompleted = e.target.checked;
+    renderTodos(todos, filters);
+  });
