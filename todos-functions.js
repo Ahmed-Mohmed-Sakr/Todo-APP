@@ -1,5 +1,5 @@
 // fetch existing todos from localStorage
-const getSavedTodos = function () {
+const getSavedTodos = () => {
   const todosJSON = localStorage.getItem("todos");
 
   if (todosJSON !== null) {
@@ -10,12 +10,12 @@ const getSavedTodos = function () {
 };
 
 // Save todos to localStorage
-const saveTodos = function (todos) {
+const saveTodos = (todos) => {
   localStorage.setItem("todos", JSON.stringify(todos));
 };
 
 // remove todo from list
-const removeTodo = function (id) {
+const removeTodo = (id) => {
   const todoIndex = todos.findIndex(function (todo) {
     return todo.id === id;
   });
@@ -26,7 +26,7 @@ const removeTodo = function (id) {
 };
 
 // toggle the completed value todo checkbox
-const toggleTodo = function (id) {
+const toggleTodo = (id) => {
   const todoIndex = todos.findIndex(function (todo) {
     return todo.id === id;
   });
@@ -37,7 +37,7 @@ const toggleTodo = function (id) {
 };
 
 // get the DOM elements for an individal note
-const generateTodoDOM = function (todo) {
+const generateTodoDOM = (todo) => {
   const todoEl = document.createElement("div");
   const checkboxEl = document.createElement("input");
   const todoText = document.createElement("span");
@@ -47,7 +47,7 @@ const generateTodoDOM = function (todo) {
   checkboxEl.setAttribute("type", "checkbox");
   checkboxEl.checked = todo.completed;
   todoEl.appendChild(checkboxEl);
-  checkboxEl.addEventListener("change", function () {
+  checkboxEl.addEventListener("change", () => {
     toggleTodo(todo.id);
     saveTodos(todos);
     renderTodos(todos, filters);
@@ -60,7 +60,7 @@ const generateTodoDOM = function (todo) {
   // setup the remove button
   removeButton.textContent = "x";
   todoEl.appendChild(removeButton);
-  removeButton.addEventListener("click", function () {
+  removeButton.addEventListener("click", () => {
     removeTodo(todo.id);
     saveTodos(todos);
     renderTodos(todos, filters);
@@ -70,7 +70,7 @@ const generateTodoDOM = function (todo) {
 };
 
 // get the DOM elements for list sammary
-const generateSummmaryDOM = function (incompleteTodos) {
+const generateSummmaryDOM = (incompleteTodos) => {
   const summary = document.createElement("h2");
   summary.textContent = `You have ${incompleteTodos.length} todos left`;
 
@@ -78,17 +78,14 @@ const generateSummmaryDOM = function (incompleteTodos) {
 };
 
 // render application todos based on filters
-const renderTodos = function (todos, filters) {
-  const filterTodos = todos.filter(function (todo) {
-    return (
+const renderTodos = (todos, filters) => {
+  const filterTodos = todos.filter(
+    (todo) =>
       todo.text.toLowerCase().includes(filters.searchText.toLowerCase()) &&
       (!filters.hideCompleted || !todo.completed)
-    );
-  });
+  );
 
-  const incompleteTodos = filterTodos.filter(function (todo) {
-    return !todo.completed;
-  });
+  const incompleteTodos = filterTodos.filter((todo) => !todo.completed);
 
   document.querySelector("#todos").innerHTML = "";
 
@@ -96,7 +93,7 @@ const renderTodos = function (todos, filters) {
     .querySelector("#todos")
     .appendChild(generateSummmaryDOM(incompleteTodos));
 
-  filterTodos.forEach(function (todo) {
+  filterTodos.forEach((todo) => {
     document.querySelector("#todos").appendChild(generateTodoDOM(todo));
   });
 };
